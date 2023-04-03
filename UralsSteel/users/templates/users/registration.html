@@ -1,0 +1,32 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+{% block subtitle %}{% endblock %}
+{% block kevas_razmer %}kevas-shop{% endblock %}
+
+{% block kevas_title %}kevas_title-about_us{% endblock %}
+{% block kevas_subtitle %}kevas_subtitle-about_us{% endblock %}
+
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+{% block content %}
+<div class="registration_form">
+    <div class="registration_form_inner">
+        <form method="post">
+
+            {% csrf_token %}
+            {% for f in form  %}
+                <div class="registration_form_item">
+                    <label for="{{ f.id_for_label }}" class="registration_form_item_lab">{{ f.label }}</label>
+                    {{ f }}
+                </div>
+
+                <div class="form-error">{{ f.errors }}</div>
+            {% endfor %}
+            <button class="registration_form_item_btn" type="submit">Регистрация</button>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

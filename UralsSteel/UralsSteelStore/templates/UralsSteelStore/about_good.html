@@ -1,0 +1,126 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}{% endblock %}
+{% block subtitle %}{% endblock %}
+{% block kevas_razmer %}kevas-shop_goods{% endblock %}
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+
+
+{% block content %}
+{#<div class="container">#}
+{#<div class="good">#}
+{#    <div class="good_go_back">#}
+{#            <a href="#" class="good_go_back_btn">Назад в каталог</a>#}
+{#    </div>#}
+{#    <div class="good_up">#}
+{#        <div class="good_mini_images">#}
+{#            <img src="https://via.placeholder.com/100x90" alt="1" class="good_mini_image">#}
+{#            <img src="https://via.placeholder.com/100x90" alt="2" class="good_mini_image">#}
+{#            <img src="https://via.placeholder.com/100x90" alt="3" class="good_mini_image">#}
+{#        </div>#}
+{#        <div class="good_current">#}
+{#            <img src="https://via.placeholder.com/520x420" alt="image of product" class="good_current_image">#}
+{#        </div>#}
+{#        <div class="good_info">#}
+{#            <div class="good_info_title">Профнастил полимер Н60 0.45 ТУ 845/902 ПЭ RAL3009 красный оксид</div>#}
+{#            <div class="good_info_panel">#}
+{#                <img src="{% static 'UralsSteelStore/icons/box.png' %}" alt="box_icon" class="good_info_icon">#}
+{#                <div class="good_info_quantity">#}
+{#                    <a href="#"><img src="{% static 'UralsSteelStore/icons/remove.png' %}" alt="remove" class="good_info_quantity_remove" width="12"></a>#}
+{#                    <div class="good_info_quantity_number">0</div>#}
+{#                    <a href="#"><img src="{% static 'UralsSteelStore/icons/plus.png' %}" alt="plus" class="good_info_quantity_plus" width="12"></a>#}
+{#                </div>#}
+{#                <div class="good_info_price">879 м\2</div>#}
+{#                <a href="#" class="good_info_add_to_basket_btn">Добавить в корзину</a>#}
+{#            </div>#}
+{##}
+{#            <a href="#" class="good_info_buy_one_click_btn">Купить в один клик</a>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="good_down">#}
+{##}
+{#    </div>#}
+{#</div>#}
+{#</div>#}
+
+<div class="container">
+<div class="good">
+{% for item in good %}
+    <div class="good_go_back">
+        <a href="{% url 'shop_catalog' %}" class="good_go_back_btn">Назад в каталог</a>
+    </div>
+    <div class="good_up">
+        <div class="good_mini_images">
+            {% for img in images %}
+                <a href="{{ img.get_absolute_url }}"><img src="{{ img.image.url }}"  alt="1" class="good_mini_image"></a>
+            {% endfor %}
+        </div>
+        <div class="good_current">
+            <img src="{% if current_img %}{{ current_img }}{% else %}{{ first_img }}{% endif %}" alt="image of product" class="good_current_image">
+        </div>
+{#    https://via.placeholder.com/520x420#}
+        <div class="good_info">
+            <div class="good_info_title">{{ item.title }}</div>
+            <div class="good_info_panel">
+                <img src="{% static 'UralsSteelStore/icons/box.png' %}" alt="box_icon" class="good_info_icon">
+                <div class="good_info_quantity">
+                    <a href="#"><img src="{% static 'UralsSteelStore/icons/remove.png' %}" alt="remove" class="good_info_quantity_remove" width="12"></a>
+                    <div class="good_info_quantity_number">0</div>
+                    <a href="#"><img src="{% static 'UralsSteelStore/icons/plus.png' %}" alt="plus" class="good_info_quantity_plus" width="12"></a>
+                </div>
+                <div class="good_info_price">{{ item.price }} м\2</div>
+{#                <form action="" method="post">#}
+{#                    {% csrf_token %}#}
+{#                    <button type="submit" value="{{ item.pk }}" class="good_info_add_to_basket_btn" name="good_info_btn">Добавить в корзину</button>#}
+{#                    <input type="submit" name="good_info_btn" value="add" class="good_info_add_to_basket_btn">#}
+{#                </form>#}
+                <a href="{% url 'basket_add' item.pk %}" class="good_info_add_to_basket_btn" >Добавить в корзину</a>
+            </div>
+
+            <a href="#" class="good_info_buy_one_click_btn">Купить в один клик</a>
+
+        </div>
+    </div>
+
+    <div class="good_down">
+        <div class="good_description">
+            <div class="good_description_title">
+                Описание
+            </div>
+            <div class="good_description_text">
+                {{ item.description }}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+    <div class="good_some_goods">
+        <div class="good_some_goods_title">
+            Похожие товары
+        </div>
+        <div class="shop_goods_inner-sm">
+            {% for item in some_goods %}
+                <div class="shop_goods_item"  id="shop_goods_item_small">
+                    <div class="shop_goods_basket">
+                        <img src="{% static 'UralsSteelStore/icons/goods-basket.png' %}" alt="basket" width="23" class="shop_goods_basket_img">
+                        <div class="shop_goods_basket_text">в корзину</div>
+                    </div>
+                       <a class="shop_goods_link" href="{{ item.get_absolute_url }}"><img src="{% for i, z in sps.items %}{% if item.pk == i %}{{ z }}{% endif %}{% endfor %}" alt="photo" class="shop_goods_img"></a>
+
+                    <div class="shop_goods_text">
+                        <div class="shop_goods_text_title">{{ item.title }}</div>
+                        <div class="shop_goods_text_price">{{ item.price }}₽</div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}

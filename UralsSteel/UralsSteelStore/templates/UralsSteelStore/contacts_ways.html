@@ -1,0 +1,79 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}Контакты{% endblock %}
+{% block subtitle %}Если есть вопросы, то свяжитесь с нами по телефону, почте или оформите заявку через форму на сайте.{% endblock %}
+{% block kevas_razmer %}kevas-shop{% endblock %}
+
+{% block kevas_title %}kevas_title-about_us{% endblock %}
+{% block kevas_subtitle %}kevas_subtitle-about_us{% endblock %}
+
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="contacts_ways">
+    <div class="contacts_ways_map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2889.551882432708!2d60.722391705182055!3d56.73514685171488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x43c169e7c0543201%3A0x4b25cefaf6906dc2!2z0JXQmtCQ0JQsIDUsIDbQsiwg0JXQutCw0YLQtdGA0LjQvdCx0YPRgNCzLCDQodCy0LXRgNC00LvQvtCy0YHQutCw0Y8g0L7QsdC7LiwgNjIwMDEw!5e1!3m2!1sru!2sru!4v1669025571137!5m2!1sru!2sru" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <div class="contacts_ways_info">
+        <div class="contacts_ways_info_title">Склад</div>
+        <div class="contacts_ways_info_adress">
+            <img src="{% static 'UralsSteelStore/icons/map1.png' %}" alt="map" class="contacts_ways_info_icons">
+            <div class="contacts_ways_info_adress_title">620010, г. Екатеринбург, ЕКАД 5 км, строение № 6В, помещение № 311.</div>
+        </div>
+
+        <div class="contacts_ways_info_phone">
+            <img src="{% static 'UralsSteelStore/icons/phone.png' %}" alt="phone" class="contacts_ways_info_icons">
+            <div class="contacts_ways_info_phone_number">8 (343) 319-19-15</div>
+        </div>
+
+        <div class="contacts_ways_info_email">
+            <img src="{% static 'UralsSteelStore/icons/mes.png' %}" alt="mes" class="contacts_ways_info_icons">
+            <div class="contacts_ways_info_email_title">info@stalurala.ru</div>
+        </div>
+    </div>
+</div>
+<div class="settlement_form">
+    <div class="settlement_form_title">Свяжитесь с нами</div>
+    <form action="{% url 'contacts_ways' %}" method="POST" class="settlement_form_inner" >
+        {% csrf_token %}
+        <div class="settlement_form_left">
+
+            <div class="settlement_form_left_item">
+                <label for="full_name_inp" class="full_name_lab">{{ form.full_name.label }}</label>
+                {{ form.full_name }}
+            </div>
+
+            <div class="settlement_form_left_item">
+                <label for="{{ form.email.id_for_label }}" class="email_lab">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+
+            <div class="settlement_form_left_item">
+                <label for="{{ form.phone_number.id_for_label }}" class="ph_number_lab">{{ form.phone_number.label }}</label>
+                {{ form.phone_number }}
+            </div>
+        </div>
+
+        <div class="settlement_form_right">
+            <label for="{{ form.comment.id_for_label }}" class="comments_lab">{{ form.comment.label }}</label>
+            {{ form.comment }}
+        </div>
+
+        <div class="settlement_form_checkbox">
+            {{ form.checkb }}
+            <label for="checkbox_inp" class="checkbox_lab">Я согласен <u>на обработку персональных данных</u></label>
+        </div>
+
+        <a href="{% url 'contacts_ways' %}" class="settlement_form_btn">
+            Отправить заявку
+        </a>
+        <button type="submit" class="settlement_form_btn">
+            Отправить заявку
+        </button>
+    </form>
+</div>
+</div>
+{% endblock %}

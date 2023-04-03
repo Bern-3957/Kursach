@@ -1,0 +1,138 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load  urals_steel_store_tags %}
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+<!-- Main page catalog -->
+{% show_index_category_list category_id=category_id %}
+</div>
+
+<div class="container">
+<div class="services">
+    <div class="services_title">Услуги</div>
+    <div class="services_inner">
+        <a href="#" class="services_item">
+            <img src="https://via.placeholder.com/350x330" alt="services_img">
+            <div class="services_item_title">Гибка металла</div>
+        </a>
+        <a href="{% url 'metal_cutting' %}" class="services_item">
+            <img src="https://via.placeholder.com/350x330" alt="services_img">
+            <div class="services_item_title">Резка металла</div>
+        </a>
+        <a href="#" class="services_item">
+            <img src="https://via.placeholder.com/350x330" alt="services_img">
+            <div class="services_item_title">Доставка</div>
+        </a>
+    </div>
+</div>
+</div>
+
+<div class="container">
+<div class="submitappl">
+    <div class="submitappl_inner">
+        <div class="submitappl_text">
+            Возникли вопросы? <br>
+            Оставьте заявку и мы с вами свяжемся
+        </div>
+        <a href="#" class="submitappl_btn" data-modal="#modal_form_request">
+            Оставить заявку
+        </a>
+    </div>
+</div>
+</div>
+
+<div class="container">
+<div class="about_us">
+    <div class="about_us_inner">
+        <div class="about_us_photo">
+            <img src="https://via.placeholder.com/430x300" alt="about_us_photo">
+        </div>
+        <div class="about_us_info">
+            <div class="about_us_title">О компани</div>
+            <div class="about_us_text">
+                Lorem ipsum dolor sit amet consectetur adipisicing
+                elit. <br> Porro laborum harum cum nam, obcaecati
+                earum molestias <br> error quam laboriosam neque
+                quas deleniti alias est nemo<br> itaque aliquam
+                maiores expedita unde!
+            </div>
+            <div class="about_us_btn">
+                Подробнее
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="container">
+<div class="circles">
+    <div class="circles_inner">
+        <div class="circles_item">
+            <div class="circles_item_number">
+                10
+            </div>
+            <div class="circles_item_text">
+                Lorem Ipsum используют
+            </div>
+        </div>
+        <div class="circles_item">
+            <div class="circles_item_number">
+                100
+            </div>
+            <div class="circles_item_text">
+                Lorem Ipsum используют
+            </div>
+        </div>
+        <div class="circles_item">
+            <div class="circles_item_number">
+                240
+            </div>
+            <div class="circles_item_text">
+                Lorem Ipsum используют
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="container">
+<div class="contact">
+    <div class="contact_info">
+        <div class="contact_title">
+            Контакты
+        </div>
+        <div class="contact_text">
+            Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют.
+        </div>
+    </div>
+    <div class="map">
+        <div class="map_info"></div>
+        <div class="map_google">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2889.551882432708!2d60.722391705182055!3d56.73514685171488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x43c169e7c0543201%3A0x4b25cefaf6906dc2!2z0JXQmtCQ0JQsIDUsIDbQsiwg0JXQutCw0YLQtdGA0LjQvdCx0YPRgNCzLCDQodCy0LXRgNC00LvQvtCy0YHQutCw0Y8g0L7QsdC7LiwgNjIwMDEw!5e1!3m2!1sru!2sru!4v1669025571137!5m2!1sru!2sru" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="container">
+    <div class="submitappl">
+        <div class="submitappl_inner">
+            <div class="submitappl_text">
+                Возникли вопросы? <br>
+                Оставьте заявку и мы с вами свяжемся
+            </div>
+            <a href="#" class="submitappl_btn" data-modal="#modal_form_request">
+                Оставить заявку
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

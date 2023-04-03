@@ -1,0 +1,143 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}Купи по Братски{% endblock %}
+{% block kevas_razmer %}kevas-shop{% endblock %}
+{% block kevas_title %}kevas_title-shop{% endblock %}
+{% block kevas_subtitle %}kevas_subtitle-shop{% endblock %}
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="shop">
+    <div class="shop_inner">
+
+        <div class="shop_filter">
+
+            <div  class="shop_filter_form">
+                {% csrf_token %}
+
+                <div class="shop_filter_price">
+                    <div class="shop_filter_price_title">
+                        Цена ₽
+                    </div>
+                    <form action="/" method="post" class="shop_filter_price_form">
+                        <input type="text" class="shop_filter_price_inp" placeholder="0">
+                        <input type="text" class="shop_filter_price_inp" placeholder="15000">
+                    </form>
+                </div>
+            </div>
+
+            <div class="shop_filter_category">
+                <div class="shop_filter_category_title">
+                    Категория
+                </div>
+                <div class="shop_filter_category_inner">
+                    {% for item in cats %}
+                        <a href="{% url 'shop_catalog_item' item.slug %}" class="shop_filter_category_item">
+                            {{ item.title }} ({{ item.cnt }})
+                        </a>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="shop_goods">
+            <form action=""  method="post" class="shop_goods_filter">
+                {% csrf_token %}
+                <select name="shop_goods_start_with" id="shop_goods_start_with" class="shop_goods_start_with" onchange="this.form.submit()">
+                    {% for i in select_items %}
+                        <option class="shop_goods_start_with_op" value="{{ i.number }}" {% if now_item == i.number %}selected{% endif %}>{{ i.title }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="shop_goods_show_item_style">
+                    <a href="#" class="shop_goods_show_item_style_link"><img src="{% static 'UralsSteelStore/icons/setka.png' %}" alt="icon" width="16" data-shop_item_small="#shop_small_item"></a>
+                    <a href="#" class="shop_goods_show_item_style_link"><img src="{% static 'UralsSteelStore/icons/menu-burger.png' %}" alt="icon" width="16" data-shop_item_big="#shop_big_item"></a>
+
+                </div>
+            </form>
+
+
+            <div class="shop_goods_inner">
+
+                {% for item in goods %}
+                    <div class="shop_goods_item"  id="shop_goods_item_small">
+                        <div class="shop_goods_basket">
+
+{#                            <form action="" method="post">#}
+{#                                {% csrf_token %}#}
+{#                                <button type="submit" value="{{ item.pk }}" name="good_info_btn"><a href=""><img src="{% static 'UralsSteelStore/icons/goods-basket.png' %}" alt="basket" width="23" class="shop_goods_basket_img"></a></button>#}
+                {#              <input type="submit" name="good_info_btn" value="add" class="good_info_add_to_basket_btn">#}
+{#                            </form>#}
+                                <button><a href="{% url 'basket_add' item.pk %}"><img src="{% static 'UralsSteelStore/icons/goods-basket.png' %}" alt="basket" width="23" class="shop_goods_basket_img"></a></button>
+{#                            <div class="shop_goods_basket_text">в корзину</div>#}
+                        </div>
+                           <a class="shop_goods_link" href="{{ item.get_absolute_url }}"><img src="{% for i, z in sps.items %}{% if item.pk == i %}{{ z }}{% endif %}{% endfor %}" alt="photo" class="shop_goods_img"></a>
+
+                        <div class="shop_goods_text">
+                            <div class="shop_goods_text_title">{{ item.title }}</div>
+                            <div class="shop_goods_text_price">{{ item.price }}₽</div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% for item in goods %}
+                    <div class="shop_goods_item_pl"  id="shop_goods_item_big">
+                        <div class="shop_goods_item_left_pl">
+{#                            <img src="{% if image.image.url %}{{ image.image.url }}{% else %}https://via.placeholder.com/320x320 {% endif %}" alt="photo" class="shop_goods_img_pl">#}
+                                <a class="shop_goods_link" href="{{ item.get_absolute_url }}"><img src="{% for i, z in sps.items %}{% if item.pk == i %}{{ z }}{% endif %}{% endfor %}" alt="photo" class="shop_goods_img_pl"></a>
+                        </div>
+                        <div class="shop_goods_item_right_pl">
+                            <div class="shop_goods_item_text_pl">
+                                {{ item.title }}
+                            </div>
+                            <div class="shop_goods_item_descr_pl">
+
+                                <div class="shop_goods_item_descr_pl-title">Описание</div>
+                                <div class="shop_goods_item_descr_pl-text">{{ item.description|truncatewords:43 }}</div>
+                            </div>
+                            <div class="shop_goods_basket_pl">
+                                <div class="shop_goods_basket_price_pl">Цена: {{ item.price }}₽ м\2</div>
+{#                                <form action="" method="post">#}
+{#                                    {% csrf_token %}#}
+{#                                    <button type="submit" value="{{ item.pk }}" name="good_info_btn"><a href="#" class="shop_goods_basket_btn_pl">Добавить в корзину</a></button>#}
+{#                                    <button type="submit" value="{{ item.pk }}" name="good_info_btn" class="shop_goods_basket_btn_pl">Добавить в корзину</button>#}
+{#                                </form>#}
+                                <a href="{% url 'basket_add' item.pk %}" class="shop_goods_basket_btn_pl">Добавить в корзину</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if goods.has_other_pages %}
+                    <ul class="shop_goods_paginator">
+                        {% if goods.has_previous %}
+                            <a href="?page={{ goods.previous_page_number }}" class="shop_goods_paginator_previous_link"><img class="shop_goods_paginator_previous_img" src="{% static 'UralsSteelStore/icons/left.png' %}" alt="left"></a>
+                        {% endif %}
+                        {% for p_number in goods.paginator.page_range %}
+                            {% if goods.number == p_number %}
+                                <li class="shop_goods_paginator_item_ch">
+                                    <a href="?page={{ p_number }}" class="shop_goods_paginator_item_link">{{ p_number }}</a>
+                                </li>
+                            {% elif p_number >= goods.number|add:-2 and p_number <= goods.number|add:2 %}
+                                <li class="shop_goods_paginator_item">
+                                    <a href="?page={{ p_number }}" class="shop_goods_paginator_item_link">{{ p_number }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if goods.has_next %}
+                            <a href="?page={{ goods.next_page_number }}" class="shop_goods_paginator_next_link"><img class="shop_goods_paginator_next_img" src="{% static 'UralsSteelStore/icons/right.png' %}" alt="right"></a>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+{% endblock %}

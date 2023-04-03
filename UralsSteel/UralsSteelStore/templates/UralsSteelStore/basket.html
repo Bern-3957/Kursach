@@ -1,0 +1,217 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+{% block subtitle %}{% endblock %}
+{% block kevas_razmer %}kevas-basket{% endblock %}
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container">
+<div class="basket">
+    <div class="basket_mini_info">
+        <div class="basket_number">({{ baskets.total_quantity }}) товара в корзине</div>
+{#        <form action="" method="post">#}
+{#            {% csrf_token %}#}
+{#            <button type="submit" value="clean" class="basket_no_style" name="clean_basket">Очистить корзину</button>#}
+{#          <input type="submit" name="good_info_btn" value="add" class="good_info_add_to_basket_btn">#}
+{#        </form>#}
+        <a href="{% url 'basket_remove_all' %}" class="basket_no_style" style="color: black">Очистить корзину</a>
+    </div>
+    <ul class="basket_head_block">
+        <li class="basket_head_block_photo_title">Фотография</li>
+        <li class="basket_head_block_h1_title">Название и арт.</li>
+        <li class="basket_head_block_price_title">Цена</li>
+        <li class="basket_head_block_quantity_title">Количество</li>
+        <li class="basket_head_block_sum_price_title">Сумма</li>
+    </ul>
+    <div class="basket_inner">
+
+{#        <div class="basket_item">#}
+{#            <img src="https://via.placeholder.com/172x110" alt="good_img" class="basket_item_img">#}
+{#            <div class="basket_item_title">Профнастил полимер Н60 0.45 ТУ 845/902 ПЭ RAL3009 красный оксид</div>#}
+{#            <div class="basket_item_price">859 ₽/м2 </div>#}
+{#            <div class="basket_item_quantity">#}
+{#                <img src="{% static 'UralsSteelStore/icons/box.png' %}" alt="box_icon" class="good_info_icon">#}
+{#                <div class="good_info_quantity">#}
+{#                    <a href="#"><img src="{% static 'UralsSteelStore/icons/remove.png' %}" alt="remove" class="good_info_quantity_remove" width="12"></a>#}
+{#                    <div class="good_info_quantity_number">0</div>#}
+{#                    <a href="#"><img src="{% static 'UralsSteelStore/icons/plus.png' %}" alt="plus" class="good_info_quantity_plus" width="12"></a>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="basket_item_sum_price">10 250 руб</div>#}
+{#            <a href="#" class="basket_item_del_btn">#}
+{#                <img src="{% static 'UralsSteelStore/icons/x.png' %}" alt="x" class="basket_item_del_btn_img">#}
+{#            </a>#}
+{#        </div>#}
+
+{#        {% if good_id_to_basket_mes == 'basket_is_full' %}#}
+            {% for item in baskets %}
+                <div class="basket_item">
+                    <img src="https://via.placeholder.com/172x110" alt="good_img" class="basket_item_img">
+                    <div class="basket_item_title">{{ item.product.title }}</div>
+                    <div class="basket_item_price">{{ item.product.price }} ₽/м2 </div>
+                    <div class="basket_item_quantity">
+                        <img src="{% static 'UralsSteelStore/icons/box.png' %}" alt="box_icon" class="good_info_icon">
+                        <div class="good_info_quantity">
+                            <a href="{% url 'basket_quantity_remove' item.product.pk %}"><img src="{% static 'UralsSteelStore/icons/remove.png' %}" alt="remove" class="good_info_quantity_remove" width="12"></a>
+                            <div class="good_info_quantity_number">{{ item.quantity }}</div>
+                            <a href="{% url 'basket_add' item.product.pk %}"><img src="{% static 'UralsSteelStore/icons/plus.png' %}" alt="plus" class="good_info_quantity_plus" width="12"></a>
+                        </div>
+                    </div>
+                    <div class="basket_item_sum_price">{{ item.product.price }} руб</div>
+                    <form action="" method="post">
+{#                    {% csrf_token %}#}
+{#                        <button type="submit" value="{{ item.pk }}" name="basket_item_del_btn" class="basket_no_style">#}
+{#                            <a href="" class="basket_item_del_btn">#}
+{#                                <img src="{% static 'UralsSteelStore/icons/x.png' %}" alt="x" class="basket_item_del_btn_img">#}
+{#                            </a>#}
+{#                        </button>#}
+    {#                    <input type="submit" name="good_info_btn" value="add" class="good_info_add_to_basket_btn">#}
+{#                    </form>#}
+                        <a href="{% url 'basket_remove' item.pk %}" class="basket_item_del_btn">
+                            <img src="{% static 'UralsSteelStore/icons/x.png' %}" alt="x" class="basket_item_del_btn_img">
+                        </a>
+
+                </div>
+            {% endfor %}
+{#        {% else %}#}
+{#        {% endif %}#}
+
+
+    <div class="basket_total_price">
+        Итого: {{ baskets.total_sum }} руб.
+    </div>
+    <a href="#" class="basket_continue_btn">
+        Продолжить
+    </a>
+</div>
+
+<div class="basket_order">
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="basket_order_title">Оформить заказ</div>
+        <div class="basket_order_common">
+            <h4 class="basket_order_common_title">Способ доставки</h4>
+            <div class="basket_order_common_variants">
+
+{#                <div class="basket_order_common_variants_item">#}
+{#                    <input class="basket_order_common_variants_item_inp" width="20" type="radio" id="delivery_radio1" name="delivery" value="Самовывоз">#}
+{#                    {{ form.delivery_radio }}#}
+{#                    <label class="basket_order_common_variants_item_lab" for="delivery_radio1">Самовывоз</label>#}
+{#                </div>#}
+{##}
+{#                <div class="basket_order_common_variants_item">#}
+{#                    {{ form.delivery_radio }}#}
+{#                    <input class="basket_order_common_variants_item_inp" type="radio" id="delivery_radio2" name="delivery" value="Доставка собственным транспортом">#}
+{#                    <label class="basket_order_common_variants_item_lab" for="delivery_radio2">Доставка собственным транспортом</label>#}
+{#                </div>#}
+{##}
+{#                <div class="basket_order_common_variants_item">#}
+{#                    {{ form.delivery_radio }}#}
+{#                    <input class="basket_order_common_variants_item_inp" type="radio" id="delivery_radio3" name="delivery" value="Доставка Транспортной компаней">#}
+{#                    <label class="basket_order_common_variants_item_lab" for="delivery_radio3">Доставка Транспортной компаней</label>#}
+{#                </div>#}
+                {% for i in form.delivery_radio %}
+                    <div class="basket_order_common_variants_item">
+                        <label for="{{ i.id_for_lablel }}" class="basket_order_common_variants_item_lab">
+                            {{ i }}
+                        </label>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="basket_order_common">
+            <h4 class="basket_order_common_title">Способ оплаты</h4>
+            <div class="basket_order_common_variants">
+
+{#                <div class="basket_order_common_variants_item_pay">#}
+{#                    {{ form.pay_radio }}#}
+{#                    <input class="basket_order_common_variants_item_inp" type="radio" id="pay_radio1" name="pay" value="Наличными при самовывозе">#}
+{#                    <label class="basket_order_common_variants_item_lab-pay" for="pay_radio1">Наличными при самовывозе</label>#}
+{#                </div>#}
+{##}
+{#                <div class="basket_order_common_variants_item_pay">#}
+{#                    {{ form.pay_radio }}#}
+{#                    <input class="basket_order_common_variants_item_inp" type="radio" id="pay_radio2" name="pay" value="Оплата по счету">#}
+{#                    <label class="basket_order_common_variants_item_lab-pay" for="pay_radio2">Оплата по счету</label>#}
+{#                </div>#}
+{##}
+{#                <div class="basket_order_common_variants_item_pay">#}
+{#                    {{ form.pay_radio }}#}
+{#                    <input class="basket_order_common_variants_item_inp" type="radio" id="pay_radio3" name="pay" value="Оплата по квитанции">#}
+{#                    <label class="basket_order_common_variants_item_lab-pay" for="pay_radio3">Оплата по квитанции</label>#}
+{#                </div>#}
+{##}
+{#                <div class="basket_order_common_variants_item_pay">#}
+{#                    {{ form.pay_radio }}#}
+{#                    <input class="basket_order_common_variants_item_inp" type="radio" id="pay_radio4" name="pay" value="Оплата картой при самовывозе">#}
+{#                    <label class="basket_order_common_variants_item_lab-pay" for="pay_radio4">Оплата картой при самовывозе</label>#}
+{#                </div>#}
+                {% for i in form.pay_radio %}
+                    <div class="basket_order_common_variants_item_pay">
+                        <label for="{{ i.id_for_lablel }}" class="basket_order_common_variants_item_lab-pay">
+                            {{ i }}
+                        </label>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        <div class="settlement_form">
+            <div class="settlement_form_title-order">Личный данные</div>
+            <div class="settlement_form_inner-order">
+                <div class="settlement_form_left-order">
+
+                    <div class="settlement_form_left_item">
+                        <label for="full_name_inp" class="full_name_lab">{{ form.full_name.label }}</label>
+                        {{ form.full_name }}
+                    </div>
+
+                    <div class="settlement_form_left_item">
+                        <label for="{{ form.email.id_for_label }}" class="email_lab">{{ form.email.label }}</label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="settlement_form_left_item">
+                        <label for="{{ form.phone_number.id_for_label }}" class="ph_number_lab">{{ form.phone_number.label }}</label>
+                        {{ form.phone_number }}
+                    </div>
+
+                </div>
+
+                <div class="settlement_form_right-order">
+                    <label for="{{ form.comment.id_for_label }}" class="comments_lab-order">{{ form.comment.label }}</label>
+                    {{ form.comment }}
+                </div>
+
+                <div class="settlement_form_checkbox">
+                    {{ form.checkb }}
+                    <label for="checkbox_inp" class="checkbox_lab">Я согласен <u>на обработку персональных данных</u></label>
+                </div>
+
+                <button type="submit" class="settlement_form_btn">
+                    Оформить заказ
+                </button>
+
+                <div class="order_number">
+                    {% if order_number %}
+                        <div>Ваш номер заказа: {{ order_number }}</div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+
+{% endblock %}

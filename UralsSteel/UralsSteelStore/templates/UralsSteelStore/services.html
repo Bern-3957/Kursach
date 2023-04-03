@@ -1,0 +1,120 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}Услуги{% endblock %}
+{% block header_basket %}{{ basket_total_price }}{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="services">
+    <div class="services_inner-of">
+        <div class="services_item-of">
+            <img src="https://via.placeholder.com/650x380" alt="services_img">
+            <div class="services_item_info">
+                <div class="services_item_title-of">Гибка металла</div>
+                <div class="services_item_text">
+                    Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют. Давно выяснено, что при оценке дизайна
+                    и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют.
+                </div>
+                <div class="services_item_btn">
+                    <a href="#" class="in_detail_btn">Подробнее</a>
+                    <a href="#" class="calc_price_btn">Расчитать стоимость</a>
+                </div>
+
+            </div>
+        </div>
+        <div class="services_item-of">
+            <img src="https://via.placeholder.com/650x380" alt="services_img">
+            <div class="services_item_info">
+                <div class="services_item_title-of">Резка металла</div>
+                <div class="services_item_text">
+                    Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют. Давно выяснено, что при оценке дизайна
+                    и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют.
+                </div>
+                <div class="services_item_btn">
+                    <a href="{%  url 'metal_cutting' %}" class="in_detail_btn">Подробнее</a>
+                    <a href="#" class="calc_price_btn">Расчитать стоимость</a>
+                </div>
+            </div>
+        </div>
+        <div class="services_item-of">
+            <img src="https://via.placeholder.com/650x380" alt="services_img">
+            <div class="services_item_info">
+                <div class="services_item_title-of">Доставка</div>
+                <div class="services_item_text">
+                    Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют. Давно выяснено, что при оценке дизайна
+                    и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют.
+                </div>
+                <div class="services_item_btn">
+                    <a href="#" class="in_detail_btn">Подробнее</a>
+                    <a href="#" class="calc_price_btn">Расчитать стоимость</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="container">
+<div class="submitappl">
+    <div class="submitappl_inner">
+        <div class="submitappl_text">
+            Возникли вопросы? <br>
+            Оставьте заявку и мы с вами свяжемся
+        </div>
+        <a href="#" class="submitappl_btn" data-modal="#modal_form_request">
+            Оставить заявку
+        </a>
+    </div>
+</div>
+</div>
+
+
+<div class="modal" id="modal_form_request">
+<div class="modal_dialog">
+
+    <div class="modal_content">
+        <button class="modal_close" type="button" data-close>
+            <img src="{% static 'UralsSteelStore/icons/modal-close.png' %}" alt="close-image">
+        </button>
+        <div class="modal_title">Заявка на обратный звонок</div>
+        <div class="modal_subtitle">Оставьте нам свои данные, и наши специалисты <br> свяжутся с вами в ближайшее время</div>
+        <form action="{% url 'services' %}" method="post" class="modal_form">
+            {% csrf_token %}
+            <div class="modal_item">
+                <label for="{{ form.full_name.id_for_label }}" class="modal_label">{{ form.full_name.label }}</label>
+                {{ form.full_name }}
+            </div>
+
+            <div class="modal_item">
+                <label for="{{ form.phone_number.id_for_label }}" class="modal_label">{{ form.phone_number.label }}</label>
+                {{ form.phone_number }}
+            </div>
+
+            <div class="modal_item">
+                <label for="{{ form.email.id_for_label }}" class="modal_label">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+
+            <div class="modal_item">
+                <label for="{{ form.comment.id_for_label }}" class="modal_label">{{ form.comment.label }}</label>
+                {{ form.comment }}
+            </div>
+
+            <div class="modal_item_ch">
+                {{ form.checkb }}
+                <label for="{{ form.checkb.id_for_label }}" class="modal_checkb_lab">Я согласен <u>на обработку персональных данных</u></label>
+            </div>
+
+            <button type="submit" class="modal_btn">
+                Отправить заявку
+            </button>
+        </form>
+    </div>
+
+
+</div>
+</div>
+
+{% endblock %}
+

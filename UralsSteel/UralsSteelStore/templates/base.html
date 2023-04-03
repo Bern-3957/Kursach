@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'UralsSteelStore/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+<div class="{% block kevas_razmer %}kevas{% endblock %}">
+    <div class="header">
+        <div class="header_left">
+            <a class="logo" href="{% url 'home' %}">Logo</a>
+            <div class="header_location">
+                <a href="#"><img src="{% static 'UralsSteelStore/icons/header/location.svg' %}" width="25" alt="location-icon"></a>
+                <a class="header_city" href="#">Екатеринбург</a>
+            </div>
+            <div class="header_menu">
+                {% for item in menu %}
+                    <a class="header_menu_item" href="{% url item.url_name %}">{{ item.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="header_right">
+            <div class="header_phone">
+                <img class="header_phone_icon" src="{% static 'UralsSteelStore/icons/header/phone.svg' %}" width="25" height="18" alt="phone-icon">
+                <a class="header_number" href="#">+7(257)255-56-95</a>
+            </div>
+{#            <div class="header_search">#}
+{#                <a href="#"><img src="{% static 'UralsSteelStore/icons/header/search.svg' %}" width="25" alt="search-icon"></a>#}
+{#            </div>#}
+            <div class="header_auth_reg">
+                {% if request.user.is_authenticated %}
+                {{ user.username }} | <a href="{% url 'users:logout' %}" style="color: black">Выйти</a>
+                {% else %}
+                <a href="{% url 'users:registration' %}" class="header_auth">Регистрация</a> | <a href="{% url 'users:authorisation' %}" class="header_reg">Войти</a>
+                {% endif %}
+            </div>
+            <div class="header_basket">
+                <a href="{% url 'basket' %}"><img src="{% static 'UralsSteelStore/icons/header/basket.svg' %}" width="25" alt="basket-icon"></a>
+                <div class="header_basket_sum_price">{% block header_basket %}{% endblock %}</div>
+            </div>
+        </div>
+    </div>
+    <div class="kevas_short_inf">
+            <div class="{% block kevas_title %}kevas_title{% endblock %}">{% block title %}Сталь Урала{% endblock %}</div>
+            <div class="{% block kevas_subtitle %}kevas_subtitle{% endblock %}">{% block subtitle %}Металлопрокат в Екатеринбурге{% endblock %}</div>
+    </div>
+</div>
+</div>
+
+{% block content %}
+{% endblock %}
+
+
+<div class="container">
+<footer class="footer">
+    <div class="footer_inner">
+        <div class="footer_info">
+            <div class="logo logo_footer">Logo</div>
+            <div class="footer_addres">
+                620010, г. Екатеринбург, ЕКАД 5 км, строение № 6В, помещение № 311.
+            </div>
+            <div class="footer_number">8 (343) 319-19-15</div>
+            <div class="footer_email">info@stalurala.ru</div>
+            <img src="{% static 'UralsSteelStore/icons/footer/vk.png' %}" class="footer_vk_icon" alt="vk_icon" width="58px">
+        </div>
+
+        <div class="footer_links">
+            <div class="footer_productions">
+                <span><a class="footer_links_item" href="#">Продукция</a></span>
+                <a class="footer_links_item" href="#">Металлопрокат</a>
+                <a class="footer_links_item" href="#">Заборы и огражения</a>
+                <a class="footer_links_item" href="#">Кровля</a>
+                <a class="footer_links_item" href="#">Профнастил</a>
+                <a class="footer_links_item" href="#">Фасад</a>
+            </div>
+            <div class="footer_about_us">
+                <span><a class="footer_links_item" href="#">О нас</a></span>
+                <a class="footer_links_item" href="#">О компании</a>
+                <a class="footer_links_item" href="#">Контакты</a>
+            </div>
+            <div class="footer_services">
+                <span><a class="footer_links_item" href="#">Доставка металла</a></span>
+                <span><a class="footer_links_item" href="{% url 'metal_cutting' %}">Резка металла</a></span>
+                <span><a class="footer_links_item" href="#">Гибка металла</a></span>
+                <span><a class="footer_links_item" href="#">F.A.Q</a></span>
+            </div>
+        </div>
+
+        <a href="#" class="footer_btn" data-modal="#modal_form_request">
+            Оставить заявку
+        </a>
+    </div>
+
+    <div class="footer_down">
+        <a href="#" class="footer_company_name">©2020, Сталь Урала</a>
+        <a href="#" class="footer_studio_link">FeelStudio</a>
+    </div>
+</footer>
+</div>
+
+<div class="modal" id="modal_form_request">
+<div class="modal_dialog">
+
+    <div class="modal_content">
+        <button class="modal_close" type="button" data-close>
+            <img src="{% static 'UralsSteelStore/icons/modal-close.png' %}" alt="close-image">
+        </button>
+        <div class="modal_title">Заявка на обратный звонок</div>
+        <div class="modal_subtitle">Оставьте нам свои данные, и наши специалисты <br> свяжутся с вами в ближайшее время</div>
+        <form action="" method="post" class="modal_form">
+            {% csrf_token %}
+            <div class="modal_item">
+                <label for="{{ form.full_name.id_for_label }}" class="modal_label">{{ form.full_name.label }}</label>
+                {{ form.full_name }}
+            </div>
+
+            <div class="modal_item">
+                <label for="{{ form.phone_number.id_for_label }}" class="modal_label">{{ form.phone_number.label }}</label>
+                {{ form.phone_number }}
+            </div>
+
+            <div class="modal_item">
+                <label for="{{ form.email.id_for_label }}" class="modal_label">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+
+            <div class="modal_item">
+                <label for="{{ form.comment.id_for_label }}" class="modal_label">{{ form.comment.label }}</label>
+                {{ form.comment }}
+            </div>
+
+            <div class="modal_item_ch">
+                {{ form.checkb }}
+                <label for="{{ form.checkb.id_for_label }}" class="modal_checkb_lab">Я согласен <u>на обработку персональных данных</u></label>
+            </div>
+
+            <button type="submit" class="modal_btn">
+                Отправить заявку
+            </button>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var scrollpos = localStorage.getItem('scrollpos');
+        if (scrollpos) window.scrollTo(0, scrollpos);
+    });
+
+    window.onbeforeunload = function(e) {
+        localStorage.setItem('scrollpos', window.scrollY);
+    };
+</script>
+<script src="{% static 'UralsSteelStore/js/scripts.js' %}"></script>
+
+</body>
+</html>
