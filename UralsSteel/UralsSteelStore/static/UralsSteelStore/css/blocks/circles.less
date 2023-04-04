@@ -1,0 +1,68 @@
+// main: ../style.less
+
+.circles{
+    padding: 50px;
+    margin-bottom: 20px;
+
+    &_inner{
+        display: flex;
+        justify-content: center;
+
+        gap: 200px;
+        flex-wrap: wrap;
+
+    }
+
+    &_item{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        width: 151px;
+        height: 151px;
+
+        border: 1px solid black;
+        border-radius: 50%;
+
+        &_number{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-weight: 700;
+            font-size: 42px;
+        }
+
+        &_text{
+            position: absolute;
+
+            bottom: -20%;
+            left: 50%;
+            transform: translateX(-32%);
+            z-index: 5;
+
+            width: 300px;
+            font-weight: 500;
+            font-size: 16px;
+
+            &-metcat{
+                position: absolute;
+
+                bottom: -30%;
+                left: 50%;
+                transform: translateX(-48%);
+                z-index: 5;
+                text-align: center;
+            }
+
+        }
+
+
+
+
+    }
+
+
+}

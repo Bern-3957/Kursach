@@ -1,0 +1,127 @@
+// main: ../style.less
+
+.services{
+    padding: 20px;
+    text-align: center;
+
+}
+
+.services_title{
+    font-weight: 500;
+    font-size: 32px;
+    color: #000;
+    
+    text-align: center;
+
+}
+
+.services_inner{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+
+    gap: 38px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    &-of{
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+
+        gap: 38px;
+        justify-content: center;
+    }
+}
+
+.services_item{
+    position: relative;
+    width: 350px;
+    height: 330px;
+    text-decoration: none;
+
+    &-of{
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        min-width: 350px;
+        min-height: 330px;
+        gap: 81px;
+    }
+}
+
+.services_item_title{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+
+    font-weight: 500;
+    font-size: 24px;
+    color: black;
+
+    &-of{
+        text-align: left;
+        font-weight: 500;
+        font-size: 32px;
+    }
+
+}
+
+.services_item_text{
+    max-width: 480px;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 17px;
+}
+
+.services_item_btn{
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+}
+
+.in_detail_btn{
+    width: 145px;
+    height: 50px;
+
+    background: #848C97;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+
+    padding: 16px 36px;
+    text-decoration: none;
+
+}
+.calc_price_btn{
+
+    width: 250px;
+    height: 50px;
+
+    font-weight: 500;
+    font-size: 14px;
+
+    border: 1px solid black;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+    padding: 16px 36px;
+    text-decoration: none;
+    color: black;
+}
+

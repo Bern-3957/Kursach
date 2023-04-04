@@ -94,7 +94,7 @@ $ (function (){
         localStorage.setItem('GoodRejim', bigGood)
     });
 
-    $('.basket_continue_btn').click(function() { $('.basket_order').hide().css('display', 'block'), $('.basket_continue_btn').hide().css('display','none')});
+    $('.basket_continue_btn').click(function() { $('.basket_order').hide().css('display', 'flex'), $('.basket_continue_btn').hide().css('display','none')});
 
     window.onload = function (event){
         if (localStorage.getItem('GoodRejim') === 'small'){

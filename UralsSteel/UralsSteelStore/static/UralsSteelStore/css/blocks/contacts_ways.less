@@ -1,0 +1,67 @@
+// main: ../style.less
+
+.contacts_ways{
+    display: flex;
+    flex-direction: row;
+    padding: 30px 100px;
+    gap: 70px;
+
+    &_map{
+        width: 50%;
+    }
+    &_info{
+        width: 50%;
+        padding: 70px 0;
+        &_icons{
+            width: 20px;
+            margin-right: 20px;
+            max-height: 30px;
+        }
+        &_title{
+            font-weight: 500;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        &_adress{
+            position: relative;
+            display: flex;
+            align-items: center;
+            &_title{
+                font-weight: 500;
+                font-size: 16px;
+            }
+            &:after{
+                position: absolute;
+                content: " ";
+                display: block;
+                background-color: rgba(109, 111, 113, 0.2);
+                width: 100%;
+                height: 1px;
+
+                top: 40px;
+                left: 0;
+
+            }
+            margin-bottom: 40px;
+        }
+        &_phone{
+            display: flex;
+            align-items: center;
+            &_number{
+                font-weight: 500;
+                font-size: 16px;
+            }
+
+            margin-bottom: 15px;
+        }
+        &_email{
+            display: flex;
+            align-items: center;
+            &_title{
+                font-weight: 500;
+                font-size: 16px;
+            }
+        }
+    }
+
+}

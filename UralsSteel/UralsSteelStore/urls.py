@@ -21,7 +21,8 @@ urlpatterns = [
     path('baskets/add/<int:product_id>/', basket_add, name='basket_add'),
     path('baskets/remove/<int:basket_id>/', basket_remove, name='basket_remove'),
     path('baskets/remove/quantity/<int:product_id>/', basket_quantity_remove, name='basket_quantity_remove'),
-    path('baskets/remove/all/', basket_remove_all, name='basket_remove_all')
+    path('baskets/remove/all/', basket_remove_all, name='basket_remove_all'),
+    path('baskets/success_order/', basket, name='success_order'),
 
 
 ]

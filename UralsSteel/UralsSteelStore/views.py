@@ -15,6 +15,7 @@ from .forms import *
 from django.db.models import Count
 # import pandas as pd
 from django.views.generic import ListView, CreateView
+from django.views.generic.edit import FormView
 from .helpers import get_good
 from django.contrib.auth.decorators import login_required
 
@@ -28,6 +29,12 @@ memory = {
     'good_id_to_basket': [],
     'basket_total_price': 0
 }
+select_items = [
+    {'number': '0', 'title': 'По умолчанию', 'order': 'ordinary_price'},
+    {'number': '1', 'title': 'По возр. цены', 'order': 'price'},
+    {'number': '2', 'title': 'По убыв. цены', 'order': '-price'},
+
+]
 
 
 class IndexListView(ListView):
@@ -52,62 +59,20 @@ class IndexListView(ListView):
         context = dict()
         category_id = 1
         context['menu'] = menu
-        # context['all_categories'] = Category_mp.objects.annotate(cnt=Count('products')).filter(cnt__gt=0)
-        # context['products'] = Products.objects.filter(category=self.kwargs['category_id'] if 'category_id' in self.kwargs else category_id)
-        # context['naw_cat'] = Category_mp.objects.get(pk=self.kwargs['category_id'] if 'category_id' in self.kwargs else category_id)
         context['category_id'] = self.kwargs['category_id'] if 'category_id' in self.kwargs else category_id
         if 'form' in kwargs:
             context['form'] = kwargs['form']
-        if memory['basket_total_price']:
-            context['basket_total_price'] = memory['basket_total_price']
+
         return context
 
 
-# def index(request, category_id=1):
-#     if request.method == 'POST':
-#         form = ModalRequestForm(request.POST)
-#         if form.is_valid():
-#             print(form.cleaned_data)
-#     else:
-#         form = ModalRequestForm()
-#
-#     all_categories = Category_mp.objects.annotate(cnt=Count('products')).filter(cnt__gt=0)
-#
-#
-#     products = Products.objects.filter(category=category_id)
-#     naw_cat = Category_mp.objects.get(pk=category_id)
-#
-#     context = {
-#         'products': products,
-#         'all_categories': all_categories,
-#         'menu': menu,
-#         'naw_cat': naw_cat,
-#         'form': form
-#     }
-#     if memory['basket_total_price']:
-#         context['basket_total_price'] = memory['basket_total_price']
-#
-#     return render(request, 'UralsSteelStore/index.html', context=context)
-# def services(request):
-#     if request.method == 'POST':
-#         form = ModalRequestForm(request.POST)
-#         if form.is_valid():
-#             print(form.cleaned_data)
-#     else:
-#         form = ModalRequestForm()
-#
-#     context = {'menu': menu, 'form': form}
-#     if memory['basket_total_price']:
-#         context['basket_total_price'] = memory['basket_total_price']
-#     return render(request, 'UralsSteelStore/services.html', context=context)
 class ServicesView(View):
     template_name = 'UralsSteelStore/services.html'
 
     def get(self, request, *args, **kwargs):
         form = ModalRequestForm()
         context = {}
-        if memory['basket_total_price']:
-            context['basket_total_price'] = memory['basket_total_price']
+
         context['form'] = form
         context['menu'] = menu
         return render(request, self.template_name, context=context)
@@ -117,8 +82,7 @@ class ServicesView(View):
         context = {}
         if form.is_valid():
             print(form.cleaned_data)
-        if memory['basket_total_price']:
-            context['basket_total_price'] = memory['basket_total_price']
+
         context['form'] = form
         context['menu'] = menu
         return render(request, self.template_name, context=context)
@@ -130,8 +94,6 @@ class Metal_cutting_View(View):
     def get(self, request, *args, **kwargs):
         form = RequestForm()
         context = {}
-        if memory['basket_total_price']:
-            context['basket_total_price'] = memory['basket_total_price']
         context['form'] = form
         context['menu'] = menu
         return render(request, self.template_name, context=context)
@@ -141,8 +103,7 @@ class Metal_cutting_View(View):
         context = {}
         if form.is_valid():
             print(form.cleaned_data)
-        if memory['basket_total_price']:
-            context['basket_total_price'] = memory['basket_total_price']
+
         context['form'] = form
         context['menu'] = menu
         return render(request, self.template_name, context=context)
@@ -179,29 +140,35 @@ def shop_catalog(request, slug_cat=None, ):
         # 'page_obj': page_obj
     }
 
-    if len(memory['good_id_to_basket']) > 0:
-        basket_items = []
-        for i in memory['good_id_to_basket']:
-            item = Goods.objects.get(pk=i)
-            basket_items.append(item)
-            print(basket_items)
-
-        basket_total_price = 0
-        for i in basket_items:
-            basket_total_price += i.price
-        context['basket_total_price'] = basket_total_price
-        memory['basket_total_price'] = basket_total_price
-
-    if request.POST.get('good_info_btn'):
-        good_id_to_basket = request.POST.get('good_info_btn')
-        print(good_id_to_basket)
-        if good_id_to_basket not in memory['good_id_to_basket']:
-            memory['good_id_to_basket'].append(good_id_to_basket)
-            return redirect(request.META['HTTP_REFERER'])
-    if memory['basket_total_price']:
-        context['basket_total_price'] = memory['basket_total_price']
-
     return render(request, 'UralsSteelStore/shop_catalog.html', context=context)
+
+# class ShopCatalogListView(ListView):
+#     model = Goods
+#     template_name = 'UralsSteelStore/shop_catalog.html'
+#     context_object_name = 'goods'
+#     paginate_by = 9
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super(ShopCatalogListView, self).get_context_data(object_list=None, **kwargs)
+#         context['cats'] = Category.objects.annotate(cnt=Count('goods')).order_by('id')
+#         context['current_select_item'] = self.request.POST.get('shop_goods_start_with')
+#         context['menu'] = menu
+#         context['select_items'] = select_items
+#         images = Gallery.objects.all()
+#         sps = {}
+#         for i in images:
+#             sps[i.good.pk] = i.image.url
+#         context['sps'] = sps
+#         return context
+#
+#     def post(self, request, *args, **kwargs):
+#         if request.POST.get('shop_goods_start_with'):
+#             goods = get_good(self.kwargs.get('slug_cat'), self.request.POST.get('shop_goods_start_with'), select_items)
+#         return goods
+
+    def get_queryset(self):
+        goods = get_good(self.kwargs.get('slug_cat'), self.request.POST.get('shop_goods_start_with'), select_items)
+        return goods
 
 
 def about_good(request, slug_cat=None, slug_good_name=None, current_img=None):
@@ -213,9 +180,6 @@ def about_good(request, slug_cat=None, slug_good_name=None, current_img=None):
     if current_img != None:
         current_img = current_img.replace('-', '/').replace('_', '.')
 
-        # first_img = images[0].image.url
-
-        # context['first_img'] = first_img
         context['current_img'] = current_img
     else:
 
@@ -238,133 +202,13 @@ def about_good(request, slug_cat=None, slug_good_name=None, current_img=None):
         sps[i.good.pk] = i.image.url
     context['sps'] = sps
 
-    if request.POST.get('good_info_btn'):
-        good_id_to_basket = request.POST.get('good_info_btn')
-        print(good_id_to_basket)
-        if good_id_to_basket not in memory['good_id_to_basket']:
-            memory['good_id_to_basket'].append(good_id_to_basket)
-            context['basket_total_price'] = memory['basket_total_price']
-            return redirect(request.META['HTTP_REFERER'])
-        return redirect(request.META['HTTP_REFERER'])
-
-    # Мешает открыть инфу о товаре
-    if memory['basket_total_price']:
-        context['basket_total_price'] = memory['basket_total_price']
-        # return redirect(request.META['HTTP_REFERER'])
-
     return render(request, 'UralsSteelStore/about_good.html', context=context)
-
-    # def basket(request):
-    #
-    #     context = {
-    #         'menu': menu
-    #     }
-    #     # if 'good_id_to_basket' in memory:
-    #     #     context['good_id_to_basket'] = memory['good_id_to_basket']
-    #
-    #     if len(memory['good_id_to_basket']) > 0:
-    #         basket_items = []
-    #         for i in memory['good_id_to_basket']:
-    #             item = Goods.objects.get(pk=i)
-    #             basket_items.append(item)
-    #             print(basket_items)
-    #
-    #         context['good_id_to_basket'] = basket_items
-    #         context['basket_len'] = len(memory['good_id_to_basket'])
-    #
-    #         basket_total_price = 0
-    #         for i in basket_items:
-    #             basket_total_price += i.price
-    #         context['basket_total_price'] = basket_total_price
-    #         memory['basket_total_price'] = basket_total_price
-    #         context['good_id_to_basket_mes'] = 'basket_is_full'
-    #     else:
-    #         context['basket_total_price'] = 0
-    #         context['good_id_to_basket_mes'] = 'basket_is_empty'
-    #         context['basket_len'] = 0
-    #
-    #     print(context)
-    #
-    #     if request.POST.get('basket_item_del_btn'):
-    #         good_for_del = request.POST.get('basket_item_del_btn')
-    #         print('good_for_del', good_for_del)
-    #         begine = memory['good_id_to_basket']
-    #         try:
-    #             begine.remove(good_for_del)
-    #         except ValueError:
-    #             print('Item not in list')
-    #         memory['good_id_to_basket'] = begine
-    #         return redirect(request.META['HTTP_REFERER'])
-    #
-    #     if request.POST.get('clean_basket'):
-    #         begine = memory['good_id_to_basket']
-    #         try:
-    #             begine.clear()
-    #         except:
-    #             print('Item not in list')
-    #         memory['good_id_to_basket'] = begine
-    #         memory['basket_total_price'] = 0
-    #         return redirect(request.META['HTTP_REFERER'])
-    #
-    #     # if request.method == 'POST':
-    #     #     form = RequestForm(request.POST)
-    #     #     if form.is_valid():
-    #     #         print(form.cleaned_data)
-    #     # else:
-    #     #     form = RequestForm()
-    #     #
-    #     # context['form'] = form
-    #
-    #     if request.method == 'POST':
-    #         form = BasketRequestForm(request.POST)
-    #         if form.is_valid():
-    #             print(memory['good_id_to_basket'], form.cleaned_data)
-    #
-    #             # df = pd.DataFrame({
-    #             #                     'Номер заказа': random.randint(3000, 10000),
-    #             #                    'ID товаров': [order for order in memory['good_id_to_basket']],
-    #             #                    'Доставка': form.cleaned_data['delivery_radio'],
-    #             #                    'Оплата': form.cleaned_data['pay_radio'],
-    #             #                    'Имя': form.cleaned_data['full_name'],
-    #             #                    'Email': form.cleaned_data['email'],
-    #             #                    'Номер телефона': form.cleaned_data['phone_number'],
-    #             #                    'Комментарий к заказу': form.cleaned_data['comment'],
-    #             #                    'Обработка данных': form.cleaned_data['checkb'],
-    #             #                    })
-    #             # df.to_excel('./orders_list.xlsx')
-    #             Orders.objects.create(
-    #                 orders_id=random.randint(3000, 10000),
-    #                 id_of_products=[order for order in memory['good_id_to_basket']],
-    #                 customer_name=form.cleaned_data['full_name'],
-    #                 customer_email=form.cleaned_data['email'],
-    #                 customer_pay_way=form.cleaned_data['pay_radio'],
-    #                 customer_delivery_way=form.cleaned_data['delivery_radio'],
-    #                 customer_comment_to_order=form.cleaned_data['comment'],
-    #                 customer_phone_number=form.cleaned_data['phone_number'],
-    #                 customer_data_processing=form.cleaned_data['checkb'],
-    #             )
-    #
-    #
-    #             memory['good_id_to_basket'].clear()
-    #             memory['basket_total_price'] = 0
-    #             return redirect(request.path)
-    #             # context['order_number'] = random.randint(50000, 1346641)
-    #     else:
-    #         form = BasketRequestForm()
-    #
-    #
-    #     context['form'] = form
-
-    # return render(request, 'UralsSteelStore/basket.html', context=context)
 
 
 def about_us(request):
     context = {
         'menu': menu,
     }
-    if memory['basket_total_price']:
-        context['basket_total_price'] = memory['basket_total_price']
-
     return render(request, 'UralsSteelStore/about_us.html', context=context)
 
 
@@ -374,8 +218,7 @@ class About_Us_TemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu'] = menu
-        if memory['basket_total_price']:
-            context['basket_total_price'] = memory['basket_total_price']
+
         return context
 
 
@@ -390,66 +233,21 @@ def contacts_ways(request):
     else:
         form = RequestForm()
     context['form'] = form
-    if memory['basket_total_price']:
-        context['basket_total_price'] = memory['basket_total_price']
+
     return render(request, 'UralsSteelStore/contacts_ways.html', context=context)
 
 
-# class RegisterUser(CreateView):
-#     """Класс регистрации пользователей, при успешной регистрации пользователь автоматически авторизуется благодаря
-#     методу form_valid"""
-#
-#     form_class = RegistrationUserForm
-#     template_name = 'UralsSteelStore/registration.html'
-#     success_url = reverse_lazy('authorisation')
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['menu'] = menu
-#         if memory['basket_total_price']:
-#             context['basket_total_price'] = memory['basket_total_price']
-#         return context
-#
-#     def form_valid(self, form):
-#         user = form.save()
-#         login(self.request, user)
-#         return redirect('home')
-# class AuthorisationUser(LoginView):
-#     """Класс авторизации пользователей, при успешной авторизации перенаправляет на первую страницу"""
-#
-#     form_class = AuthorisationUserForm
-#     template_name = 'UralsSteelStore/authorisation.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['menu'] = menu
-#         if memory['basket_total_price']:
-#             context['basket_total_price'] = memory['basket_total_price']
-#         return context
-#
-#     def get_success_url(self):
-#         return reverse_lazy('home')
-# def logout_user(request):
-#     """Выход пользователя из авторизованного состояния"""
-#     logout(request)
-#     memory['good_id_to_basket'] = []
-#     memory['basket_total_price'] = 0
-#
-#     return redirect('authorisation')
-
 @login_required(login_url='users:registration')
 def basket(request):
-    # if request.user.is_anonymous:
-    #     return redirect('users:registration')
     context = {'menu': menu, 'baskets': Basket.objects.filter(user=request.user), }
 
     if request.method == 'POST':
         form = BasketRequestForm(request.POST)
         if form.is_valid():
             print(memory['good_id_to_basket'], form.cleaned_data)
-
+            orders_id = random.randint(3000, 10000)
             Orders.objects.create(
-                orders_id=random.randint(3000, 10000),
+                orders_id=orders_id,
                 id_of_products=[order for order in memory['good_id_to_basket']],
                 customer_name=form.cleaned_data['full_name'],
                 customer_email=form.cleaned_data['email'],
@@ -458,8 +256,12 @@ def basket(request):
                 customer_comment_to_order=form.cleaned_data['comment'],
                 customer_phone_number=form.cleaned_data['phone_number'],
                 customer_data_processing=form.cleaned_data['checkb'],
+                user=request.user
             )
-            return redirect(request.path)
+            baskets = Basket.objects.filter(user=request.user)
+            for basket in baskets:
+                basket.delete()
+            return render(request, 'UralsSteelStore/success_order.html', context={'menu': menu, 'orders_id': orders_id})
             # context['order_number'] = random.randint(50000, 1346641)
     else:
         form = BasketRequestForm()
@@ -503,3 +305,186 @@ def basket_remove_all(request):
     for basket in baskets:
         basket.delete()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+# def index(request, category_id=1):
+#     if request.method == 'POST':
+#         form = ModalRequestForm(request.POST)
+#         if form.is_valid():
+#             print(form.cleaned_data)
+#     else:
+#         form = ModalRequestForm()
+#
+#     all_categories = Category_mp.objects.annotate(cnt=Count('products')).filter(cnt__gt=0)
+#
+#
+#     products = Products.objects.filter(category=category_id)
+#     naw_cat = Category_mp.objects.get(pk=category_id)
+#
+#     context = {
+#         'products': products,
+#         'all_categories': all_categories,
+#         'menu': menu,
+#         'naw_cat': naw_cat,
+#         'form': form
+#     }
+#     if memory['basket_total_price']:
+#         context['basket_total_price'] = memory['basket_total_price']
+#
+#     return render(request, 'UralsSteelStore/index.html', context=context)
+# def services(request):
+#     if request.method == 'POST':
+#         form = ModalRequestForm(request.POST)
+#         if form.is_valid():
+#             print(form.cleaned_data)
+#     else:
+#         form = ModalRequestForm()
+#
+#     context = {'menu': menu, 'form': form}
+#     if memory['basket_total_price']:
+#         context['basket_total_price'] = memory['basket_total_price']
+#     return render(request, 'UralsSteelStore/services.html', context=context)
+# def basket(request):
+#
+#     context = {
+#         'menu': menu
+#     }
+#     # if 'good_id_to_basket' in memory:
+#     #     context['good_id_to_basket'] = memory['good_id_to_basket']
+#
+#     if len(memory['good_id_to_basket']) > 0:
+#         basket_items = []
+#         for i in memory['good_id_to_basket']:
+#             item = Goods.objects.get(pk=i)
+#             basket_items.append(item)
+#             print(basket_items)
+#
+#         context['good_id_to_basket'] = basket_items
+#         context['basket_len'] = len(memory['good_id_to_basket'])
+#
+#         basket_total_price = 0
+#         for i in basket_items:
+#             basket_total_price += i.price
+#         context['basket_total_price'] = basket_total_price
+#         memory['basket_total_price'] = basket_total_price
+#         context['good_id_to_basket_mes'] = 'basket_is_full'
+#     else:
+#         context['basket_total_price'] = 0
+#         context['good_id_to_basket_mes'] = 'basket_is_empty'
+#         context['basket_len'] = 0
+#
+#     print(context)
+#
+#     if request.POST.get('basket_item_del_btn'):
+#         good_for_del = request.POST.get('basket_item_del_btn')
+#         print('good_for_del', good_for_del)
+#         begine = memory['good_id_to_basket']
+#         try:
+#             begine.remove(good_for_del)
+#         except ValueError:
+#             print('Item not in list')
+#         memory['good_id_to_basket'] = begine
+#         return redirect(request.META['HTTP_REFERER'])
+#
+#     if request.POST.get('clean_basket'):
+#         begine = memory['good_id_to_basket']
+#         try:
+#             begine.clear()
+#         except:
+#             print('Item not in list')
+#         memory['good_id_to_basket'] = begine
+#         memory['basket_total_price'] = 0
+#         return redirect(request.META['HTTP_REFERER'])
+#
+#     # if request.method == 'POST':
+#     #     form = RequestForm(request.POST)
+#     #     if form.is_valid():
+#     #         print(form.cleaned_data)
+#     # else:
+#     #     form = RequestForm()
+#     #
+#     # context['form'] = form
+#
+#     if request.method == 'POST':
+#         form = BasketRequestForm(request.POST)
+#         if form.is_valid():
+#             print(memory['good_id_to_basket'], form.cleaned_data)
+#
+#             # df = pd.DataFrame({
+#             #                     'Номер заказа': random.randint(3000, 10000),
+#             #                    'ID товаров': [order for order in memory['good_id_to_basket']],
+#             #                    'Доставка': form.cleaned_data['delivery_radio'],
+#             #                    'Оплата': form.cleaned_data['pay_radio'],
+#             #                    'Имя': form.cleaned_data['full_name'],
+#             #                    'Email': form.cleaned_data['email'],
+#             #                    'Номер телефона': form.cleaned_data['phone_number'],
+#             #                    'Комментарий к заказу': form.cleaned_data['comment'],
+#             #                    'Обработка данных': form.cleaned_data['checkb'],
+#             #                    })
+#             # df.to_excel('./orders_list.xlsx')
+#             Orders.objects.create(
+#                 orders_id=random.randint(3000, 10000),
+#                 id_of_products=[order for order in memory['good_id_to_basket']],
+#                 customer_name=form.cleaned_data['full_name'],
+#                 customer_email=form.cleaned_data['email'],
+#                 customer_pay_way=form.cleaned_data['pay_radio'],
+#                 customer_delivery_way=form.cleaned_data['delivery_radio'],
+#                 customer_comment_to_order=form.cleaned_data['comment'],
+#                 customer_phone_number=form.cleaned_data['phone_number'],
+#                 customer_data_processing=form.cleaned_data['checkb'],
+#             )
+#
+#
+#             memory['good_id_to_basket'].clear()
+#             memory['basket_total_price'] = 0
+#             return redirect(request.path)
+#             # context['order_number'] = random.randint(50000, 1346641)
+#     else:
+#         form = BasketRequestForm()
+#
+#
+#     context['form'] = form
+
+# return render(request, 'UralsSteelStore/basket.html', context=context)
+
+
+# class RegisterUser(CreateView):
+#     """Класс регистрации пользователей, при успешной регистрации пользователь автоматически авторизуется благодаря
+#     методу form_valid"""
+#
+#     form_class = RegistrationUserForm
+#     template_name = 'UralsSteelStore/registration.html'
+#     success_url = reverse_lazy('authorisation')
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['menu'] = menu
+#         if memory['basket_total_price']:
+#             context['basket_total_price'] = memory['basket_total_price']
+#         return context
+#
+#     def form_valid(self, form):
+#         user = form.save()
+#         login(self.request, user)
+#         return redirect('home')
+# class AuthorisationUser(LoginView):
+#     """Класс авторизации пользователей, при успешной авторизации перенаправляет на первую страницу"""
+#
+#     form_class = AuthorisationUserForm
+#     template_name = 'UralsSteelStore/authorisation.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['menu'] = menu
+#         if memory['basket_total_price']:
+#             context['basket_total_price'] = memory['basket_total_price']
+#         return context
+#
+#     def get_success_url(self):
+#         return reverse_lazy('home')
+# def logout_user(request):
+#     """Выход пользователя из авторизованного состояния"""
+#     logout(request)
+#     memory['good_id_to_basket'] = []
+#     memory['basket_total_price'] = 0
+#
+#     return redirect('authorisation')

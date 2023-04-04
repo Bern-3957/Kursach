@@ -1,0 +1,69 @@
+// main: ../style.less
+
+.our_company{
+    &_one{
+        &_adv{
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            &_item{
+                display: flex;
+                align-items: center;
+
+                &_img{
+                    width: 51px;
+                    height: 51px;
+                    background-color: gray;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                }
+
+                &_text{
+                    font-weight: 500;
+                    font-size: 14px;
+                    color: #000000;
+                }
+
+            }
+
+
+        }
+
+        &_facts{
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 50px 0;
+
+            &_item{
+                width: 130px;
+                height: 130px;
+                border-radius: 50%;
+                border: 1px solid gray;
+                position: relative;
+
+
+                &_text{
+                    position: absolute;
+                    top: 40%;
+                    left: 50%;
+                    transform: translateX(-50%);
+
+
+                    font-size: 23px;
+                    font-weight: 700;
+                }
+
+            }
+
+        }
+
+        &_img{
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+    }
+
+}

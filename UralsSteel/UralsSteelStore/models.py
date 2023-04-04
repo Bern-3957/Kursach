@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from users.models import User
+
+
 # Create your models here.
 
 class Products(models.Model):
@@ -12,13 +14,12 @@ class Products(models.Model):
     def __str__(self):
         return self.title
 
-class Category_mp(models.Model):
 
+class Category_mp(models.Model):
     title = models.CharField(max_length=150, db_index=True, verbose_name='Наименование категории')
 
     def __str__(self):
         return self.title
-
 
 
 class Goods(models.Model):
@@ -47,17 +48,16 @@ class Category(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, unique=True)
 
     class Meta:
-
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self):
         return self.title
 
+
 class Gallery(models.Model):
     image = models.ImageField(upload_to='goods/%Y/%m/%d', blank=True)
     good = models.ForeignKey('Goods', on_delete=models.CASCADE, verbose_name='Изображение', related_name='images')
-
 
     def get_absolute_url(self, img=False):
         # current_img = self.image.url.split('/')[-1].split('.')[0]
@@ -69,12 +69,14 @@ class Gallery(models.Model):
             'current_img': current_img,
         })
 
+
 class BasketQuerySet(models.QuerySet):
     def total_sum(self):
         return sum([basket.sum() for basket in self])
 
     def total_quantity(self):
         return sum([basket.quantity for basket in self])
+
 
 class Basket(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -100,9 +102,7 @@ class Orders(models.Model):
     customer_comment_to_order = models.TextField()
     customer_phone_number = models.CharField(max_length=25)
     customer_data_processing = models.CharField(max_length=15)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.orders_id
-
-
-
+        return str(self.orders_id)
